@@ -518,14 +518,15 @@ function initializeCarousel() {
         }
     }
 
-    // Debounce carousel navigation to prevent rapid clicks
-    let isNavigating = false;
-    const navigationCooldown = 600; // milliseconds
+    // Button navigation with minimal cooldown
+    let lastNavigationTime = 0;
+    const navigationMinGap = 300; // ms - minimal gap between navigations
 
     function navigateCarousel(direction) {
-        if (isNavigating) return; // Prevent rapid navigation
+        const now = Date.now();
+        if (now - lastNavigationTime < navigationMinGap) return;
         
-        isNavigating = true;
+        lastNavigationTime = now;
         if (direction === 'next') {
             currentSlide = (currentSlide + 1) % totalSlides;
         } else {
@@ -533,10 +534,6 @@ function initializeCarousel() {
         }
         scrollToSlide(currentSlide);
         updateIndicators();
-        
-        setTimeout(() => {
-            isNavigating = false;
-        }, navigationCooldown);
     }
 
     // Previous button
@@ -553,34 +550,58 @@ function initializeCarousel() {
         });
     }
 
-    // Touch/Swipe support
+    // Touch/Swipe support dengan better sensitivity handling
     let touchStartX = 0;
     let touchStartY = 0;
     let touchEndX = 0;
     let touchEndY = 0;
-    let isSwipeInProgress = false;
+    let touchStartTime = 0;
+    let isSwipeActive = false;
 
     gamesCarousel.addEventListener('touchstart', (e) => {
-        touchStartX = e.changedTouches[0].screenX;
-        touchStartY = e.changedTouches[0].screenY;
-        isSwipeInProgress = true;
-    }, false);
+        if (e.touches.length !== 1) return; // Hanya handle single touch
+        
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        touchStartTime = Date.now();
+        isSwipeActive = true;
+    }, { passive: true });
 
     gamesCarousel.addEventListener('touchend', (e) => {
-        touchEndX = e.changedTouches[0].screenX;
-        touchEndY = e.changedTouches[0].screenY;
-        handleSwipe();
-        isSwipeInProgress = false;
-    }, false);
+        if (!isSwipeActive) return;
+        
+        touchEndX = e.changedTouches[0].clientX;
+        touchEndY = e.changedTouches[0].clientY;
+        const touchDuration = Date.now() - touchStartTime;
+        
+        handleSwipe(touchDuration);
+        isSwipeActive = false;
+    }, { passive: true });
 
-    function handleSwipe() {
-        const swipeThreshold = 80; // Increased from 50 for less sensitivity
-        const verticalThreshold = 50; // Ignore if vertical movement too much
+    gamesCarousel.addEventListener('touchmove', (e) => {
+        // Prevent default jika ini adalah horizontal swipe untuk carousel
+        if (Math.abs(touchStartX - e.touches[0].clientX) > Math.abs(touchStartY - e.touches[0].clientY)) {
+            // This is horizontal - keep swipe active
+        }
+    }, { passive: true });
+
+    function handleSwipe(duration) {
+        const swipeThreshold = 100; // Minimum distance for swipe (increased for less sensitivity)
+        const verticalThreshold = 80; // Maximum vertical movement allowed
+        const maxDuration = 1000; // Maximum time for swipe (in ms)
+        
         const horizontalDiff = touchStartX - touchEndX;
         const verticalDiff = Math.abs(touchStartY - touchEndY);
+        const absHorizontalDiff = Math.abs(horizontalDiff);
 
-        // Only process if horizontal movement is significant and vertical is minimal
-        if (Math.abs(horizontalDiff) > swipeThreshold && verticalDiff < verticalThreshold) {
+        // Check if movement is primarily horizontal (not vertical scroll)
+        const isHorizontalSwipe = absHorizontalDiff > verticalDiff;
+        const isSignificantMovement = absHorizontalDiff > swipeThreshold;
+        const isValidDuration = duration < maxDuration && duration > 50; // Minimum 50ms
+        const isMinimalVertical = verticalDiff < verticalThreshold;
+
+        // Only process if all conditions met
+        if (isHorizontalSwipe && isSignificantMovement && isValidDuration && isMinimalVertical) {
             if (horizontalDiff > 0) {
                 // Swiped left - go to next
                 currentSlide = (currentSlide + 1) % totalSlides;
