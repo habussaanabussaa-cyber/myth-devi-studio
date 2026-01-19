@@ -1,10 +1,3 @@
-// ==================== 
-// ADVANCED ANIMATIONS
-// ==================== 
-
-/**
- * Parallax scroll effect untuk hero section
- */
 function setupParallaxEffect() {
     const hero = document.querySelector('.hero');
     const floatingElements = document.querySelectorAll('.floating-element');
