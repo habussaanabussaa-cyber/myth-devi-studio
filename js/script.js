@@ -1,6 +1,3 @@
-// ==================== 
-// GAME DATA
-// ==================== 
 const gamesData = [
     {
         id: 1,
@@ -55,6 +52,60 @@ const gamesData = [
         genre: 'Strategy',
         status: 'Tersedia',
         year: 2025
+    },
+    {
+        id: 7,
+        title: 'Starforge Odyssey',
+        description: 'Space exploration RPG dengan crafting system dan customizable spaceship.',
+        icon: '<i class="fas fa-rocket"></i>',
+        genre: 'Adventure',
+        status: 'Development',
+        year: 2026
+    },
+    {
+        id: 8,
+        title: 'Chronos Escape',
+        description: 'Puzzle platformer dengan mekanik manipulasi waktu yang inovatif.',
+        icon: '<i class="fas fa-hourglass-end"></i>',
+        genre: 'Puzzle',
+        status: 'Tersedia',
+        year: 2025
+    },
+    {
+        id: 9,
+        title: 'Dragon Wars Online',
+        description: 'MMORPG dengan world berkembang dinamis dan PvP yang seru.',
+        icon: '<i class="fas fa-dragon"></i>',
+        genre: 'MMORPG',
+        status: 'Development',
+        year: 2026
+    },
+    {
+        id: 10,
+        title: 'Pixel Apocalypse',
+        description: 'Roguelike survival dengan voxel graphics dan permadeath mechanics.',
+        icon: '<i class="fas fa-virus"></i>',
+        genre: 'Survival',
+        status: 'Coming Soon',
+        year: 2026
+    },
+    {
+        id: 11,
+        title: 'Mystic Garden',
+        description: 'Cozy farming simulation dengan elemen magic dan puzzle yang relaxing.',
+        icon: '<i class="fas fa-leaf"></i>',
+        genre: 'Simulation',
+        status: 'Tersedia',
+        year: 2025
+    },
+    {
+        id: 12,
+        title: 'Void Protocol',
+        description: 'Cyberpunk hacking game dengan branching storyline dan multiple endings.',
+        icon: '<i class="fas fa-laptop"></i>',
+        genre: 'Adventure',
+        status: 'Development',
+        year: 2026
     }
 ];
 
@@ -176,31 +227,62 @@ ${news.excerpt}
 }
 
 // ==================== 
-// NAVIGATION FUNCTIONS
+// HAMBURGER MENU FUNCTIONALITY
 // ==================== 
 
 /**
- * Toggle hamburger menu untuk mobile
+ * Toggle hamburger menu
  */
-function toggleHamburger() {
-    const navMenu = document.getElementById('navMenu');
+function toggleHamburgerMenu() {
     const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('navMenu');
     
-    navMenu.classList.toggle('active');
-    hamburger.classList.toggle('active');
+    if (hamburger && navMenu) {
+        hamburger.classList.toggle('active');
+        navMenu.classList.toggle('active');
+    }
 }
 
 /**
- * Close hamburger menu ketika link diklik
+ * Setup hamburger menu event listener
  */
-function closeHamburgerMenu() {
-    const navMenu = document.getElementById('navMenu');
+function setupHamburgerMenu() {
     const hamburger = document.getElementById('hamburger');
     
-    navMenu.classList.remove('active');
-    hamburger.classList.remove('active');
+    if (hamburger) {
+        hamburger.addEventListener('click', toggleHamburgerMenu);
+    }
+
+    // Close menu when a nav link is clicked
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', () => {
+            const hamburger = document.getElementById('hamburger');
+            const navMenu = document.getElementById('navMenu');
+            
+            if (hamburger && navMenu) {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            }
+        });
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('navMenu');
+        const navbar = document.querySelector('.navbar');
+        
+        if (hamburger && navMenu && navbar) {
+            if (!navbar.contains(e.target)) {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            }
+        }
+    });
 }
 
+// ==================== 
+// NAVIGATION FUNCTIONS
 // ==================== 
 // FORM HANDLING
 // ==================== 
@@ -277,7 +359,6 @@ function setupSmoothScroll() {
             e.preventDefault();
             const target = document.querySelector(this.getAttribute('href'));
             if (target) {
-                closeHamburgerMenu();
                 target.scrollIntoView({
                     behavior: 'smooth',
                     block: 'start'
@@ -381,13 +462,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Render content
     renderGames();
     renderNews();
-
+    
+    // Setup hamburger menu
+    setupHamburgerMenu();
+    
     // Setup event listeners
-    const hamburger = document.getElementById('hamburger');
-    if (hamburger) {
-        hamburger.addEventListener('click', toggleHamburger);
-    }
-
     const contactForm = document.getElementById('contactForm');
     if (contactForm) {
         contactForm.addEventListener('submit', handleContactForm);
@@ -398,12 +477,155 @@ document.addEventListener('DOMContentLoaded', () => {
     highlightActiveNavLink();
     observeElements();
     animateCounters();
+    initializeCarousel();
 
     // Log initialization
     console.log('[OK] Myth Devi Studio website loaded successfully!');
     console.log('Games loaded:', gamesData.length);
     console.log('News loaded:', newsData.length);
 });
+
+// ==================== 
+// CAROUSEL FUNCTIONALITY
+// ==================== 
+
+let currentSlide = 0;
+let totalSlides = 0;
+
+/**
+ * Initialize carousel for games section
+ */
+function initializeCarousel() {
+    const gamesCarousel = document.getElementById('gamesCarousel');
+    const carouselPrev = document.getElementById('carouselPrev');
+    const carouselNext = document.getElementById('carouselNext');
+    const carouselIndicators = document.getElementById('carouselIndicators');
+
+    if (!gamesCarousel) return;
+
+    totalSlides = gamesData.length;
+    currentSlide = 0;
+
+    // Create carousel indicators
+    if (carouselIndicators) {
+        carouselIndicators.innerHTML = '';
+        for (let i = 0; i < totalSlides; i++) {
+            const indicator = document.createElement('button');
+            indicator.className = `carousel-indicator ${i === 0 ? 'active' : ''}`;
+            indicator.setAttribute('aria-label', `Go to slide ${i + 1}`);
+            indicator.addEventListener('click', () => goToSlide(i));
+            carouselIndicators.appendChild(indicator);
+        }
+    }
+
+    // Previous button
+    if (carouselPrev) {
+        carouselPrev.addEventListener('click', () => {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            scrollToSlide(currentSlide);
+            updateIndicators();
+        });
+    }
+
+    // Next button
+    if (carouselNext) {
+        carouselNext.addEventListener('click', () => {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            scrollToSlide(currentSlide);
+            updateIndicators();
+        });
+    }
+
+    // Touch/Swipe support
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    gamesCarousel.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    }, false);
+
+    gamesCarousel.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    }, false);
+
+    function handleSwipe() {
+        const swipeThreshold = 50;
+        const diff = touchStartX - touchEndX;
+
+        if (Math.abs(diff) > swipeThreshold) {
+            if (diff > 0) {
+                // Swiped left - go to next
+                currentSlide = (currentSlide + 1) % totalSlides;
+            } else {
+                // Swiped right - go to previous
+                currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            }
+            scrollToSlide(currentSlide);
+            updateIndicators();
+        }
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        const gameSection = document.getElementById('games');
+        if (!gameSection) return;
+
+        const rect = gameSection.getBoundingClientRect();
+        const isInView = rect.top < window.innerHeight && rect.bottom > 0;
+
+        if (isInView) {
+            if (e.key === 'ArrowLeft') {
+                currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+                scrollToSlide(currentSlide);
+                updateIndicators();
+            } else if (e.key === 'ArrowRight') {
+                currentSlide = (currentSlide + 1) % totalSlides;
+                scrollToSlide(currentSlide);
+                updateIndicators();
+            }
+        }
+    });
+}
+
+/**
+ * Scroll to specific slide
+ */
+function scrollToSlide(slideIndex) {
+    const gamesCarousel = document.getElementById('gamesCarousel');
+    const gameCards = gamesCarousel.querySelectorAll('.game-card');
+
+    if (gameCards[slideIndex]) {
+        gameCards[slideIndex].scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest',
+            inline: 'start'
+        });
+    }
+}
+
+/**
+ * Go to specific slide
+ */
+function goToSlide(slideIndex) {
+    currentSlide = slideIndex;
+    scrollToSlide(currentSlide);
+    updateIndicators();
+}
+
+/**
+ * Update indicator buttons
+ */
+function updateIndicators() {
+    const indicators = document.querySelectorAll('.carousel-indicator');
+    indicators.forEach((indicator, index) => {
+        if (index === currentSlide) {
+            indicator.classList.add('active');
+        } else {
+            indicator.classList.remove('active');
+        }
+    });
+}
 
 // ==================== 
 // UTILITY FUNCTIONS
