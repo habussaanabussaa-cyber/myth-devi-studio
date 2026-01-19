@@ -14,7 +14,7 @@
         <div class="nav-container">
             <div class="nav-logo">
                 <span class="logo-icon"><i class="fas fa-gamepad"></i></span>
-                <span>Myth Devi Studio</span>
+                <span class="logo-text">Myth Devi Studio</span>
             </div>
             <ul class="nav-menu" id="navMenu">
                 <li><a href="#home" class="nav-link">Beranda</a></li>
@@ -54,8 +54,21 @@
             <p>Jelajahi koleksi game terbaru dari Myth Devi Studio</p>
         </div>
 
-        <div class="games-grid" id="gamesGrid">
-
+        <div class="games-carousel-container">
+            <div class="games-carousel" id="gamesCarousel">
+                <div class="games-grid" id="gamesGrid">
+                    <!-- Games will be populated here -->
+                </div>
+            </div>
+            <button class="carousel-btn carousel-prev" id="carouselPrev" aria-label="Previous game">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="carousel-btn carousel-next" id="carouselNext" aria-label="Next game">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+            <div class="carousel-indicators" id="carouselIndicators">
+                <!-- Indicators will be populated here -->
+            </div>
         </div>
     </section>
 
