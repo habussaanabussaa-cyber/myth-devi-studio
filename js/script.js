@@ -518,43 +518,70 @@ function initializeCarousel() {
         }
     }
 
+    // Debounce carousel navigation to prevent rapid clicks
+    let isNavigating = false;
+    const navigationCooldown = 600; // milliseconds
+
+    function navigateCarousel(direction) {
+        if (isNavigating) return; // Prevent rapid navigation
+        
+        isNavigating = true;
+        if (direction === 'next') {
+            currentSlide = (currentSlide + 1) % totalSlides;
+        } else {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+        }
+        scrollToSlide(currentSlide);
+        updateIndicators();
+        
+        setTimeout(() => {
+            isNavigating = false;
+        }, navigationCooldown);
+    }
+
     // Previous button
     if (carouselPrev) {
         carouselPrev.addEventListener('click', () => {
-            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-            scrollToSlide(currentSlide);
-            updateIndicators();
+            navigateCarousel('prev');
         });
     }
 
     // Next button
     if (carouselNext) {
         carouselNext.addEventListener('click', () => {
-            currentSlide = (currentSlide + 1) % totalSlides;
-            scrollToSlide(currentSlide);
-            updateIndicators();
+            navigateCarousel('next');
         });
     }
 
     // Touch/Swipe support
     let touchStartX = 0;
+    let touchStartY = 0;
     let touchEndX = 0;
+    let touchEndY = 0;
+    let isSwipeInProgress = false;
 
     gamesCarousel.addEventListener('touchstart', (e) => {
         touchStartX = e.changedTouches[0].screenX;
+        touchStartY = e.changedTouches[0].screenY;
+        isSwipeInProgress = true;
     }, false);
 
     gamesCarousel.addEventListener('touchend', (e) => {
         touchEndX = e.changedTouches[0].screenX;
+        touchEndY = e.changedTouches[0].screenY;
         handleSwipe();
+        isSwipeInProgress = false;
     }, false);
 
     function handleSwipe() {
-        const swipeThreshold = 50;
-        const diff = touchStartX - touchEndX;
+        const swipeThreshold = 80; // Increased from 50 for less sensitivity
+        const verticalThreshold = 50; // Ignore if vertical movement too much
+        const horizontalDiff = touchStartX - touchEndX;
+        const verticalDiff = Math.abs(touchStartY - touchEndY);
 
-        if (Math.abs(diff) > swipeThreshold) {
-            if (diff > 0) {
+        // Only process if horizontal movement is significant and vertical is minimal
+        if (Math.abs(horizontalDiff) > swipeThreshold && verticalDiff < verticalThreshold) {
+            if (horizontalDiff > 0) {
                 // Swiped left - go to next
                 currentSlide = (currentSlide + 1) % totalSlides;
             } else {
