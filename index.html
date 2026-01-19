@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Myth Devi Studio - Game Development Studio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/responsive.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <span class="logo-icon"><i class="fas fa-gamepad"></i></span>
+                <span>Myth Devi Studio</span>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#home" class="nav-link">Beranda</a></li>
+                <li><a href="#games" class="nav-link">Game Terbaru</a></li>
+                <li><a href="#about" class="nav-link">Tentang Kami</a></li>
+                <li><a href="#contact" class="nav-link">Kontak</a></li>
+            </ul>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Myth Devi Studio</h1>
+            <p class="hero-subtitle">Menciptakan Pengalaman Gaming yang Luar Biasa</p>
+            <p class="hero-description">Studio game independen yang berdedikasi menghadirkan inovasi dan kreativitas dalam setiap project</p>
+            <button class="cta-button" onclick="document.getElementById('games').scrollIntoView({behavior: 'smooth'})">
+                Lihat Game Terbaru
+            </button>
+        </div>
+        <div class="hero-background">
+            <div class="floating-element"></div>
+            <div class="floating-element floating-element-2"></div>
+            <div class="floating-element floating-element-3"></div>
+        </div>
+    </section>
+
+
+    <section id="games" class="games-section">
+        <div class="section-header">
+            <h2>Game Terbaru</h2>
+            <p>Jelajahi koleksi game terbaru dari Myth Devi Studio</p>
+        </div>
+
+        <div class="games-grid" id="gamesGrid">
+
+        </div>
+    </section>
+
+
+    <section class="news-section">
+        <div class="section-header">
+            <h2>Berita & Update</h2>
+            <p>Perkembangan terbaru dari tim kami</p>
+        </div>
+
+        <div class="news-grid" id="newsGrid">
+
+        </div>
+    </section>
+
+
+    <section id="about" class="about-section">
+        <div class="section-header">
+            <h2>Tentang Myth Devi Studio</h2>
+        </div>
+        
+        <div class="about-content">
+            <div class="about-text">
+                <h3>Siapa Kami?</h3>
+                <p>Myth Devi Studio adalah sebuah studio game independen yang didirikan dengan visi untuk menciptakan pengalaman gaming yang memorable dan inovatif. Tim kami terdiri dari developer, designer, dan artist berpengalaman yang passionate tentang game development.</p>
+                
+                <h3>Misi Kami</h3>
+                <p>Kami berkomitmen untuk menghadirkan game-game berkualitas tinggi yang menghibur, menginspirasi, dan memberikan nilai bagi semua pemain di seluruh dunia.</p>
+
+                <h3>Nilai-Nilai Kami</h3>
+                <ul class="values-list">
+                    <li><i class="fas fa-star"></i> Inovasi dalam Game Design</li>
+                    <li><i class="fas fa-handshake"></i> Kolaborasi Tim yang Solid</li>
+                    <li><i class="fas fa-gem"></i> Kualitas Tanpa Kompromi</li>
+                    <li><i class="fas fa-lightbulb"></i> Kreativitas Tanpa Batas</li>
+                </ul>
+            </div>
+
+            <div class="about-stats">
+                <div class="stat-card">
+                    <h4 id="gameCount">12+</h4>
+                    <p>Game Diluncurkan</p>
+                </div>
+                <div class="stat-card">
+                    <h4 id="playerCount">500K+</h4>
+                    <p>Pemain Aktif</p>
+                </div>
+                <div class="stat-card">
+                    <h4 id="teamCount">15+</h4>
+                    <p>Tim Developer</p>
+                </div>
+                <div class="stat-card">
+                    <h4 id="awardCount">8+</h4>
+                    <p>Penghargaan</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="contact" class="contact-section">
+        <div class="section-header">
+            <h2>Hubungi Kami</h2>
+            <p>Kami ingin mendengar dari Anda!</p>
+        </div>
+
+        <div class="contact-content">
+            <div class="contact-info">
+                <div class="info-item">
+                    <span class="info-icon"><i class="fas fa-envelope"></i></span>
+                    <div>
+                        <h4>Email</h4>
+                        <p>info@mythdevistudio.com</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-icon"><i class="fas fa-share-alt"></i></span>
+                    <div>
+                        <h4>Social Media</h4>
+                        <div class="social-links">
+                            <a href="https://twitter.com/mythdevistudio" class="social-link">Twitter</a>
+                            <a href="https://discord.gg/NXz7SedyW5" class="social-link">Discord</a>
+                            <a href="https://www.instagram.com/myth.devistudio" class="social-link">Instagram</a>
+                            <a href="#" class="social-link">YouTube</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <form class="contact-form" id="contactForm">
+                <input type="text" placeholder="Nama Anda" required>
+                <input type="email" placeholder="Email Anda" required>
+                <textarea placeholder="Pesan Anda" rows="5" required></textarea>
+                <button type="submit" class="submit-button">Kirim Pesan</button>
+            </form>
+        </div>
+    </section>
+
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2025 Myth Devi Studio. Semua hak dilindungi.</p>
+            <p>Dibuat dengan <i class="fas fa-heart"></i> oleh Tim Myth Devi Studio</p>
+        </div>
+    </footer>
+
+    <script src="./js/script.js"></script>
+    <script src="./js/animations.js"></script>
+</body>
+</html>
